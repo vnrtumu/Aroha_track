@@ -35,6 +35,9 @@
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
+                    <ul class="navbar-nav">
+                        <li  class="nav-item">{{ date('d/m/y h:i:s') }}</li>
+                    </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -60,11 +63,16 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
+                                    
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
+                                    <a class="dropdown-item" href=""> History</a>
                                 </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                
+                               
                             </li>
                         @endguest
                     </ul>
@@ -78,9 +86,8 @@
     </div>
 
 
-    @section('scripts')
+    @section("scripts")
 
     @show
-   
 </body>
 </html>
