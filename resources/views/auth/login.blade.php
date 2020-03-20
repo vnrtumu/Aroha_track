@@ -53,7 +53,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="login">
                                     {{ __('Login') }}
                                 </button>
 
@@ -70,4 +70,57 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function(){
+    $("#login").click(function() {
+        var email = $("#email").val();
+        var password = $("#password").val();
+        if(email != '' && password != ''){
+            function displayTime() {
+                var str = "";
+                var currentTime = new Date()
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var seconds = currentTime.getSeconds();
+                var month = currentTime.getMonth()+1; 
+                var day = currentTime.getDate();
+                var year = currentTime.getFullYear();
+
+                if (minutes < 10) {
+                    minutes = "0" + minutes
+                }
+                if (seconds < 10) {
+                    seconds = "0" + seconds
+                }
+
+                if (day < 10) {
+                    day = "0" + day
+                }
+                if (month < 10) {
+                    month = "0" + month
+                }
+                str += year +"-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds + " ";
+                
+                return str;
+            }
+            var date = displayTime();
+            $.ajax({
+                type:'POST',
+                url:'/create',
+                data: {  
+                    "_token": "{{ csrf_token() }}", 
+                    "email": email, 
+                    "last_login_time": date,  
+                    },
+                success:function() {}
+            });
+        }
+        
+    });
+    
+})
+</script>
 @endsection

@@ -58,7 +58,7 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    <!-- <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
@@ -66,8 +66,9 @@
                                     
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
-                                    </form>
+                                    </form> -->
                                     <a class="dropdown-item" href=""> History</a>
+                                    <a class="dropdown-item" href="" id="logout"> {{ __('Logout') }}</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -85,9 +86,15 @@
         </main>
     </div>
 
-
+    <script src="{{ asset('js/jquery.js') }}"></script>
     @section("scripts")
 
     @show
+
+<script>
+$(document).ready(function(){
+   
+})
+</script>
 </body>
 </html>

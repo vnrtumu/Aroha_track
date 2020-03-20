@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\UserLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Auth;
+use App\User;
 
 class UserLogController extends Controller
 {
@@ -14,7 +17,9 @@ class UserLogController extends Controller
      */
     public function index()
     {
-        //
+        $userlog = UserLog::all();
+       
+        return view('home', compact('userlog'));
     }
 
     /**
@@ -24,8 +29,17 @@ class UserLogController extends Controller
      */
     public function create(Request $request)
     {
-        $userlog  = $request->all();
-        $userlog = UserLog::create($userlog);
+
+        $userlog  = [];
+        $user  = DB::table('users')
+                ->where('email', '=', $request->email)
+                ->get();
+
+        if(count($user) == 1){
+            $userlog['user_id'] = $user[0]->id;
+            $userlog['last_login_time'] = $request->last_login_time;
+            $userlog = UserLog::create($userlog);
+        }
         return redirect()->back();
     }
 
@@ -69,9 +83,12 @@ class UserLogController extends Controller
      * @param  \App\UserLog  $userLog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserLog $userLog)
+    public function update(Request $request)
     {
-        //
+        $task_status = DB::table('user_logs')
+            ->where('user_id', '=', $request->user_id)
+            ->update(['last_logout_time' => $request->last_logout_time,  'updated_at' => now()]);
+        Auth::logout();
     }
 
     /**

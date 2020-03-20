@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\Request;
 
 class LoginController extends Controller
 {
+    
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -21,6 +22,7 @@ class LoginController extends Controller
     |
     */
 
+    // exit();
     use AuthenticatesUsers;
 
     /**

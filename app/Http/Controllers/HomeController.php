@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\UserLog;
 
 use Illuminate\Http\Request;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $last_log = UserLog::where([['user_id', '=', Auth::user()->id],['last_logout_time', '=', '']])->get();
+        $userlogs = UserLog::where('user_id', '=', Auth::user()->id)->get();
+        return view('home', compact('userlogs', 'last_log'));
     }
 }
