@@ -18,6 +18,7 @@ class CreateUserLogsTable extends Migration
             $table->integer('user_id');
             $table->string('last_login_time')->nullable();
             $table->string('last_logout_time')->nullable();
+            $table->string('no_of_hours')->nullable();
             $table->timestamps();
         });
     }

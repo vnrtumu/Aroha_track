@@ -84,9 +84,10 @@ class UserLogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {
+    {                   
+
         $task_status = DB::table('user_logs')
-            ->where('user_id', '=', $request->user_id)
+            ->where([['user_id', '=', $request->user_id], ['last_logout_time', '=', Null]])
             ->update(['last_logout_time' => $request->last_logout_time,  'updated_at' => now()]);
         Auth::logout();
     }

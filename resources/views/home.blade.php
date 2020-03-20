@@ -14,7 +14,6 @@
                     @endif
                     You are logged at {{ Auth::user()->last_login_at }}
                 <div id="container">
-                    <h1></h1>
                     <p>Your Session ends in <span id="clock" style="font-size: 44px; color: red " > </span> minutes.</p>
                 </div>  
                 </div>
@@ -142,7 +141,7 @@ $(document).ready(function(){
     }
     var date = displayTime();
     var counter = 0;
-    var timeLeft = 1800;
+    var timeLeft = 10;
     function convertSeconds(s) {
         var min  = Math.floor(s / 60);
         var sec  = s % 60;
@@ -153,8 +152,9 @@ $(document).ready(function(){
     function timeIt(){
         counter++;
         $("#clock").text(convertSeconds(timeLeft - counter));
-        if((timeLeft - counter) == 180) {
-            $("#MyPopup").modal("show");
+        if((timeLeft - counter) == 5) {
+            // setInterval(function(){ $("#MyPopup").modal('show'); }, 3000)
+            $("#MyPopup").modal('show');
         } else if ( (timeLeft - counter) == 0){
             var date = displayTime();
             $.ajax({
