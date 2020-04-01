@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/history', 'UserLogController@history')->name('history');
+
+
 Auth::routes(['verify' => true]);
 
 
@@ -24,3 +27,8 @@ Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::post('/create', 'UserLogController@create')->name('create');
 Route::post('/update', 'UserLogController@update')->name('update');
+
+
+Route::get('/sendemails', 'UserLogController@sendemails')->name('sendemails');
+
+

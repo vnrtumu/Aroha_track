@@ -5,6 +5,10 @@ use App\UserLog;
 
 use Illuminate\Http\Request;
 use Auth;
+use View;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class HomeController extends Controller
 {
@@ -25,8 +29,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $last_log = UserLog::where([['user_id', '=', Auth::user()->id],['last_logout_time', '=', '']])->get();
-        $userlogs = UserLog::where('user_id', '=', Auth::user()->id)->get();
-        return view('home', compact('userlogs', 'last_log'));
+        $total_no_of_hours = DB::table("user_logs")->where('user_id', '=', Auth::user()->id)->whereDate('created_at', Carbon::today())->get()->sum("no_of_hours");
+        $userlogs = UserLog::where('user_id', '=', Auth::user()->id)
+                    ->whereDate('created_at', Carbon::today())
+                    ->get();
+        return View::make('home', compact('userlogs', 'total_no_of_hours'));
     }
 }

@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use App\User;
+use DateTime;
+use Carbon\Carbon;
+
+
+use Illuminate\Support\Facades\Mail;
 
 class UserLogController extends Controller
 {
@@ -21,6 +26,47 @@ class UserLogController extends Controller
        
         return view('home', compact('userlog'));
     }
+
+    public function history()
+    {
+        $total_no_of_hours = DB::table("user_logs")->where('user_id', '=', Auth::user()->id)->whereDate('created_at', Carbon::today())->get()->sum("no_of_hours");
+        $userlogs = UserLog::where('user_id', '=', Auth::user()->id)
+                    ->whereDate('created_at', Carbon::today())
+                    ->get();
+        return view('history', compact('userlogs', 'total_no_of_hours'));
+    }
+
+
+    public function sendemails()
+    {
+        $users = User::all();
+       
+        $array = [];
+        for($i = 0; $i < count($users); $i++){
+            $total_no_of_hours = DB::table("user_logs")->where('user_id', '=', $users[$i]->id)->whereDate('created_at', Carbon::today())->get()->sum("no_of_hours");
+            $msg = "Today ".$users[$i]->name . "'s work timing is: " . gmdate("H:i:s", (int)$total_no_of_hours) ."secs" ;
+
+            $email = $users[$i]->email;
+            $messageData = ['name' => $users[$i]->name, 'email' => $users[$i]->email, 'data' =>  $msg];
+            Mail::send('emails.mail', $messageData, function ($message) use ($email) {
+                $message->to($email)
+                    ->subject('Aroha tracer Today work Status');
+                $message->from('admin@aroha.co.in', 'Aroha Tracking');
+            });
+
+            array_push($array, $msg);
+
+        }
+
+        $data = $array;
+        $email = 'ramesh@aroha.co.in';
+        $messageData = ['name' => "Admin",  'data' =>  $data];
+        Mail::send('emails.adminemail', $messageData, function ($message) use ($email) {
+            $message->to($email)
+                ->subject('Aroha tracer Today work Status');
+            $message->from('admin@aroha.co.in', 'Aroha Tracking');
+        });
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -84,11 +130,15 @@ class UserLogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {                   
-
+    {     
+        $task_status_login = DB::table('user_logs')
+        ->where([['user_id', '=', $request->user_id], ['last_logout_time', '=', Null]])
+        ->select('last_login_time')
+        ->get();
+        $seconds  = strtotime($request->last_logout_time) - strtotime($task_status_login[0]->last_login_time );
         $task_status = DB::table('user_logs')
             ->where([['user_id', '=', $request->user_id], ['last_logout_time', '=', Null]])
-            ->update(['last_logout_time' => $request->last_logout_time,  'updated_at' => now()]);
+            ->update(['last_logout_time' => $request->last_logout_time, 'no_of_hours' => $seconds,  'updated_at' => now()]);
         Auth::logout();
     }
 

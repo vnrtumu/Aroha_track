@@ -85,5 +85,11 @@
                 </div>
             </div>
         </div>
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script>
+        $(window).on('onbeforeunload',function(){
+            return "Good Bye!"
+        });
+        </script>
     </body>
 </html>

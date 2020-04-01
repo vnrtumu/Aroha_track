@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container d-none">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -23,7 +23,8 @@
     </div>
 </div>
 <div class="container mt-5">
-<h3>Your time logs for today</h3>
+<h3>Your History </h3> 
+<button class="btn btn-primary"><a href="{{ route('sendemails') }}">Send Emails</button>
 <table class="table">
 
   <thead class="bg-dark text-light" >
@@ -226,3 +227,4 @@ $(document).ready(function(){
 
 </script>
 @endsection
+
